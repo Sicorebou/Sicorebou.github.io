@@ -2,5 +2,11 @@
   <body>
     <p>Hi</p>
     <img src="282f3618a0050e25328bcedaf80b0266.png">
+<?php
+$url="google.com";
+$ch=curl_init();
+$result=curl_exec();
+curl_close($ch);
+echo htmlspecialchars($result);
   </body>
 </html>
