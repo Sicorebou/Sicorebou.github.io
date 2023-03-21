@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<div id="map"></div>
+<head>
+    <meta charset="utf-8">
+    <!-- leaflet読み込み -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+
+    <script type="text/javascript">
+        var request= new XMLHttpRequest();
+        var mymap = L.map('map');
+        var lat="";
+        var long="";
+
+        //ISS位置を取得
+        request.open('GET','http://api.open-notify.org/iss-now.json',true);
+        request.responseType='json';
+
+        request.onload=function(){
+            var result=this.response;
+            lat=result['iss_position']['latitude'];
+            long=result['iss_position']['longitude'];
+            console.log(lat+","+long);
+        };
+
+        request.send();
+
+        L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
+        attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">国土地理院</a>'
+        }).addTo(mymap);
+        
+        //console.log(lat);
+        mymap.setView([lat,long], 5);
+
+        //マーカー表示
+        var marker = L.marker([lat,long]).addTo(mymap);
+        marker.bindPopup("ISS current location");
+
+        //１分ごとに自動更新
+        var timer=60*1000;
+        window.addEventListener('load',function(){
+        setInterval('location.reload()',timer);
+        });
+    </script>
+     </head>
+</html>
